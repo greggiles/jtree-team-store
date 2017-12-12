@@ -30,12 +30,25 @@ module.exports = function Cart(oldCart) {
         this.totalPrice -= this.items[id].price;
         delete this.items[id];
     };
-    
+
     this.generateArray = function() {
         var arr = [];
         for (var id in this.items) {
             arr.push(this.items[id]);
         }
         return arr;
+    };
+    this.generateMeta = function() {
+        var meta = "";
+        for (var id in this.items) {
+            if (meta.length > 1)
+                meta = meta + "\n";
+            meta = meta +
+                "qty: " + this.items[id].qty +
+                ", price: " + this.items[id].price +
+                ", desc: " + this.items[id].item.description
+        }
+        console.log(meta);
+        return meta;
     };
 };

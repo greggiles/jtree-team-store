@@ -6,6 +6,43 @@
     </div>
 </div>
 
+<div class="row">
+ <form action="/">
+   <label>Gender:</label>
+  <select name="sex">
+    <option value="*"></option>
+    <option value="Men">Men</option>
+    <option value="Women">Women</option>
+  </select>
+  <label>Family:</label>
+  <select name="family">
+    <option value="*"></option>
+    <option value="Pinnacle">Pinnacle</option>
+    <option value="Vpro">VPro</option>
+    <option value="Classic">Classic</option>
+    <option value="Bibs">Bibs</option>
+    <option value="Shorts">Shorts</option>
+    <option value="Jackets">Jackets</option>
+    <option value="Arms">Arms</option>
+    <option value="Legs">Legs</option>
+    <option value="Shirts">Shirts</option>
+  </select>
+  <label>Size:</label>
+  <select name="size">
+    <option value="*"></option>
+    <option value="XS">XS</option>
+    <option value="SM">S</option>
+    <option value="MD">M</option>
+    <option value="LG">L</option>
+    <option value="XL">XL</option>
+    <option value="XXL">XXL</option>
+  </select>
+      <input type="submit" value="Filter" />
+  </form>
+
+</div>
+
+
 {{# each products }}
     <div class="row">
         {{# each this }}

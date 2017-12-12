@@ -8,7 +8,12 @@ var Order = require('../models/order');
 /* GET home page. */
 router.get('/', function (req, res, next) {
     var successMsg = req.flash('success')[0];
-    Product.find(function (err, docs) {
+    console.log(req.query);
+    if (req.query.sex == "*") delete req.query.sex;
+    if (req.query.family == "*") delete req.query.family;
+    if (req.query.size == "*") delete req.query.size;
+
+    Product.find(req.query, function (err, docs) {
         var productChunks = [];
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i += chunkSize) {
@@ -75,14 +80,15 @@ router.post('/checkout', isLoggedIn, function(req, res, next) {
     var cart = new Cart(req.session.cart);
     
     var stripe = require("stripe")(
-        "sk_test_fwmVPdJfpkmwlQRedXec5IxR"
+        "sk_test_KPWxRxNRrISeE32cd7dqeNFM"
     );
 
     stripe.charges.create({
         amount: cart.totalPrice * 100,
         currency: "usd",
         source: req.body.stripeToken, // obtained with Stripe.js
-        description: "Test Charge"
+        description: cart.generateMeta()
+        //metadata: cart.generateMeta()
     }, function(err, charge) {
         if (err) {
             req.flash('error', err.message);
