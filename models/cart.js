@@ -51,4 +51,32 @@ module.exports = function Cart(oldCart) {
         console.log(meta);
         return meta;
     };
+    this.generateHTML = function() {
+        var meta = "<div><ul>";
+        for (var id in this.items) {
+            meta = meta +
+                "<li>" + this.items[id].item.description +
+                "</li><ul><li>Qty: "+ this.items[id].qty + "</li><li>Size: "+this.items[id].item.size +"</li><li>Price: "+this.items[id].price+"</li></ul>"
+        }
+        meta = meta + "</ul></div>";
+        return meta;
+    };
+    this.generateCounts = function() {
+        var counts = [];
+        for (var id in this.items) {
+            var num = this.items[id].item.item;
+            var sz = this.items[id].item.size;
+            var cnt = this.items[id].qty;
+            var query = {};
+            query[sz] = cnt;
+
+            var item = {
+                num: num,
+                q: query
+            };
+
+            counts.push(item);
+        }
+        return counts;
+    };
 };

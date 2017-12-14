@@ -21,7 +21,7 @@ var userRoutes = require('./routes/user');
 var app = express();
 
 
-console.log('mongoPath is ' + process.env.MONGO_PATH)
+console.log('mongoPath is ' + process.env.MONGO_PATH);
 
 mongoose.connect('mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PW+'@'+process.env.MONGO_PATH);
 require('./config/passport');

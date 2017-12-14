@@ -8,7 +8,8 @@ var schema = new Schema({
     price: {type: Number, required: true},
     sex: {type: String, required: true},
     family: {type: String, required: true},
-    size: {type: String, required: true}
+    size: {type: String, required: true},
+    item: {type: String, required: true}
 });
 
 module.exports = mongoose.model('Product', schema);

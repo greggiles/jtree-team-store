@@ -2,8 +2,24 @@ var express = require('express');
 var router = express.Router();
 var Cart = require('../models/cart');
 
+var User = require('../models/user');
 var Product = require('../models/product');
+var Productcount = require('../models/productcount');
 var Order = require('../models/order');
+
+var nodemailer = require('nodemailer');
+var mg = require('nodemailer-mailgun-transport');
+
+// This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
+var auth = {
+    auth: {
+        api_key: process.env.EMAIL_API,
+        domain: 'jtreestore.lefernando.xyz'
+    }
+}
+
+var nodemailerMailgun = nodemailer.createTransport(mg(auth));
+
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -90,6 +106,33 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     res.render('shop/checkout', {total: cart.totalPrice, errMsg: errMsg, noError: !errMsg});
 });
 
+router.get('/testemail', isLoggedIn, function(req, res, next) {
+    User.findById(req.user, function(err, user){
+        if (err) {
+            console.log('could not find user for order!');
+        }
+        else{
+            nodemailerMailgun.sendMail({
+                from: 'teamjtree1@gmail.com',
+                to: user.email, // An array if you have multiple recipients.
+                subject: 'Hey! We got your order',
+                'h:Reply-To': 'teamjtree1@gmail.com',
+                //You can use "html:" to send HTML email content. It's magic!
+                html: '<b>We got your order. You\'re on the Team</b><p>Here is what we got</p><ul><li>Thing 1</li><li>thing 2</li></ul>',
+                text: '-jtree'
+            }, function (err, info) {
+                if (err) {
+                    console.log('Error: ' + err);
+                }
+                else {
+                    console.log('Response: ' + info);
+                }
+            });
+        }
+    });
+    res.redirect('/');
+});
+
 router.post('/checkout', isLoggedIn, function(req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');
@@ -119,6 +162,44 @@ router.post('/checkout', isLoggedIn, function(req, res, next) {
             name: req.body.name,
             paymentId: charge.id
         });
+
+        var counts = cart.generateCounts();
+        console.log('Counts: ' + JSON.stringify(counts));
+        for (var i = 0; i < counts.length; i++) {
+            Productcount.findOneAndUpdate({item: counts[i].num}, {$inc:counts[i].q}, {new: true}, function(err, doc) {
+                if (err) {
+                    console.log("Something wrong when updating data!");
+                }
+                console.log("Updated Order Counts: " + doc);
+            });
+        }
+
+        User.findById(req.user, function(err, user){
+            if (err) {
+                console.log('could not find user for order!');
+            }
+            else{
+                nodemailerMailgun.sendMail({
+                    from: 'teamjtree1@gmail.com',
+                    to: user.email, // An array if you have multiple recipients.
+                    subject: 'Hey! We got your order',
+                    'h:Reply-To': 'teamjtree1@gmail.com',
+                    //You can use "html:" to send HTML email content. It's magic!
+                    html: '<b>We got your order. You\'re on the Team</b><p>Here is what we got for you:</p>' + cart.generateHTML() + '<p>Now get on with you\'re training!</p>',
+                    text: '-jtree'
+                }, function (err, info) {
+                    if (err) {
+                        console.log('Error: ' + err);
+                    }
+                    else {
+                        console.log('Response: ' + info);
+                    }
+                });
+            }
+        });
+
+
+
         order.save(function(err, result) {
             req.flash('success', 'Successfully bought product!');
             req.session.cart = null;
