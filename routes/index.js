@@ -106,6 +106,18 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     res.render('shop/checkout', {total: cart.totalPrice, errMsg: errMsg, noError: !errMsg});
 });
 
+router.get('/counts', isLoggedIn, function(req, res, next) {
+    Productcount.find({}, function (err, docs) {
+        var errMsg = "";
+        if (err) {
+            errMsg = "error finding counts " + err;
+        }
+        console.log(JSON.stringify(docs));
+        res.render('shop/counts', {counts: docs, errMsg: errMsg, noError: !errMsg});
+    });
+});
+
+
 router.get('/testemail', isLoggedIn, function(req, res, next) {
     User.findById(req.user, function(err, user){
         if (err) {

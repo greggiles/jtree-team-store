@@ -1,0 +1,65 @@
+<style>
+table {
+    width:100%;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+td, th {
+    padding: 5px;
+    text-align: center;
+}
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+table tr:nth-child(odd) {
+   background-color:#fff;
+}
+table th {
+    background-color: black;
+    color: white;
+}
+</style>
+<div>
+<table>
+  <col width="15">
+  <col width="45">
+  <col width="5">
+  <col width="5">
+  <col width="5">
+  <col width="5">
+  <col width="5">
+  <col width="5">
+  <col width="5">
+  <col width="5">
+    <tr>
+    <th>Item</th>
+    <th>Description</th>
+    <th>XS</th>
+    <th>SM</th>
+    <th>MD</th>
+    <th>LG</th>
+    <th>XL</th>
+    <th>XXL</th>
+    <th>XXXL</th>
+  </tr>
+{{# each counts }}
+    {{# each this }}
+ {{#if this.item}}
+     <tr>
+    <td>{{ this.item }}</td>
+    <td>{{ this.title }}</td>
+    <td>{{ this.XS }}</td>
+    <td>{{ this.SM }}</td>
+    <td>{{ this.MD }}</td>
+    <td>{{ this.LG }}</td>
+    <td>{{ this.XL }}</td>
+    <td>{{ this.XXL }}</td>
+    <td>{{ this.XXXL }}</td>
+    </tr>
+    {{/if}}
+    {{/each}}
+{{/each}}
+</table>
+</div>
