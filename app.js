@@ -1,3 +1,6 @@
+if (process.env.NODE_ENV == 'development') {
+    require('dotenv').load();
+}
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -17,7 +20,10 @@ var userRoutes = require('./routes/user');
 
 var app = express();
 
-mongoose.connect('mongodb://store:Store%20Password1@ds137256.mlab.com:37256/store');
+
+console.log('mongoPath is ' + process.env.MONGO_PATH)
+
+mongoose.connect('mongodb://'+process.env.MONGO_USER+':'+process.env.MONGO_PW+'@'+process.env.MONGO_PATH);
 require('./config/passport');
 
 // view engine setup

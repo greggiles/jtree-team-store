@@ -1,4 +1,8 @@
-Stripe.setPublishableKey('pk_test_DstIGUsILUg9JI6m3E4CKfjS');
+//console.log("Stripe -- " + process.env.STRIPE_PK);
+
+Stripe.setPublishableKey("pk_live_aXDv3bhnG7JWi2WILXO9uZ48");
+//Stripe.setPublishableKey("pk_test_DstIGUsILUg9JI6m3E4CKfjS");
+//Stripe.setPublishableKey(process.env.STRIPE_PK);
 
 var $form = $('#checkout-form');
 
@@ -36,3 +40,4 @@ function stripeResponseHandler(status, response) {
 
     }
 }
+

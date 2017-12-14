@@ -1,4 +1,12 @@
 {
 "alias": [
-  "jtreetest.lefernando.xyz"
-]}
+  "jtreestore.lefernando.xyz"
+],
+"env": {
+  "STRIPE_SK": "@stripe_live_sk",
+  "MONGO_PW": "@mlab_store_pw",
+  "MONGO_PATH": "@mlab_store_path",
+  "MONGO_USER": "@mlab_store_user"
+}
+
+}

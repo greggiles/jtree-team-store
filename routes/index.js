@@ -8,18 +8,35 @@ var Order = require('../models/order');
 /* GET home page. */
 router.get('/', function (req, res, next) {
     var successMsg = req.flash('success')[0];
-    console.log(req.query);
-    if (req.query.sex == "*") delete req.query.sex;
-    if (req.query.family == "*") delete req.query.family;
-    if (req.query.size == "*") delete req.query.size;
+    var query = req.query;
+    if (query.sex == "*") delete query.sex;
+    if (query.family == "*") delete query.family;
+    if (query.size == "*") delete query.size;
 
-    Product.find(req.query, function (err, docs) {
+    Product.find(query, function (err, docs) {
         var productChunks = [];
         var chunkSize = 3;
         for (var i = 0; i < docs.length; i += chunkSize) {
             productChunks.push(docs.slice(i, i + chunkSize));
         }
-        res.render('shop/index', {title: 'Shopping Cart', products: productChunks, successMsg: successMsg, noMessages: !successMsg});
+        res.render('shop/index', {
+            title: 'JTree Kit',
+            products: productChunks,
+            query: req.query,
+            successMsg: successMsg,
+            noMessages: !successMsg,
+            helpers: {
+                select: function (value, options) {
+                    return options.fn()
+                    .split('\n')
+                    .map(function (v) {
+                        var t = 'value="' + value + '"';
+                        return RegExp(t).test(v) ? v.replace(t, t + ' selected="selected"') : v;
+                    })
+                    .join('\n');
+                }
+            }
+        });
     });
 });
 
@@ -80,7 +97,8 @@ router.post('/checkout', isLoggedIn, function(req, res, next) {
     var cart = new Cart(req.session.cart);
     
     var stripe = require("stripe")(
-        "sk_test_KPWxRxNRrISeE32cd7dqeNFM"
+    //    "sk_test_KPWxRxNRrISeE32cd7dqeNFM"
+        process.env.STRIPE_SK
     );
 
     stripe.charges.create({
@@ -104,7 +122,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next) {
         order.save(function(err, result) {
             req.flash('success', 'Successfully bought product!');
             req.session.cart = null;
-            res.redirect('/');
+            res.redirect('/user/profile');
         });
     }); 
 });

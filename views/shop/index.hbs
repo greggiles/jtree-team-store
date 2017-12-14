@@ -6,16 +6,21 @@
     </div>
 </div>
 
+
 <div class="row">
+
  <form action="/">
    <label>Gender:</label>
   <select name="sex">
+    {{#select query.sex}}
     <option value="*"></option>
     <option value="Men">Men</option>
     <option value="Women">Women</option>
+    {{/select}}
   </select>
   <label>Family:</label>
   <select name="family">
+    {{#select query.family}}
     <option value="*"></option>
     <option value="Pinnacle">Pinnacle</option>
     <option value="Vpro">VPro</option>
@@ -26,9 +31,11 @@
     <option value="Arms">Arms</option>
     <option value="Legs">Legs</option>
     <option value="Shirts">Shirts</option>
+    {{/select}}
   </select>
   <label>Size:</label>
   <select name="size">
+    {{#select query.size}}
     <option value="*"></option>
     <option value="XS">XS</option>
     <option value="SM">S</option>
@@ -36,6 +43,7 @@
     <option value="LG">L</option>
     <option value="XL">XL</option>
     <option value="XXL">XXL</option>
+    {{/select}}
   </select>
       <input type="submit" value="Filter" />
   </form>
