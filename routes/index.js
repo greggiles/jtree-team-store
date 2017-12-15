@@ -10,6 +10,8 @@ var Order = require('../models/order');
 var nodemailer = require('nodemailer');
 var mg = require('nodemailer-mailgun-transport');
 
+var async = require('async');
+
 // This is your API key that you retrieve from www.mailgun.com/cp (free up to 10K monthly emails)
 var auth = {
     auth: {
@@ -106,14 +108,75 @@ router.get('/checkout', isLoggedIn, function(req, res, next) {
     res.render('shop/checkout', {total: cart.totalPrice, errMsg: errMsg, noError: !errMsg});
 });
 
+getSum = function (doc) {
+    doc.sum = 0;
+    doc.val = 0;
+    doc.sum = doc.XS + doc.SM + doc.MD + doc.LG + doc.XL + doc.XXL + doc.XXXL;
+    //console.log(doc.item + ' = ' + doc.sum);
+    doc.val = doc.price * doc.sum;
+    return doc;
+};
+
+var OrderQuery = Order.find();
+
+getPeeps = function (item,size) {
+    var peeps = [];
+    async.waterfall([
+        function (callback) {
+            Product.find({item: item, size: size}, function (err, product) {
+                if(err) console.log ('err finding product: ' + err);
+                //console.log(product);
+                var qstr = 'cart.items.' + product[0]._id;
+                //console.log('generated qstr: ' + qstr);
+                callback(null, qstr);
+            })
+        },
+        function (qstr, callback) {
+            console.log('about to search for Orders with ' + qstr);
+            Order.find({qstr: {$exists: false}}, function (err, orders) {
+                // console.log(orders);
+                if (typeof orders !== 'undefined' && orders.length > 0) {
+                    orders.forEach(function (value) {
+                        peeps.push(value.name)
+                    });
+                    console.log('found '+ orders.length + ' orders from: ' + peeps);
+                }
+                //else console.log('No orders found.');
+                return peeps;
+                callback(null, peeps)
+            })
+        }
+    ], function (err, results) {
+        if (err) console.log('error during waterfall');
+        if (peeps.length < 1) peeps = ['no one'];
+        return peeps;
+    });
+
+};
+
 router.get('/counts', isLoggedIn, function(req, res, next) {
     Productcount.find({}, function (err, docs) {
         var errMsg = "";
         if (err) {
             errMsg = "error finding counts " + err;
         }
-        console.log(JSON.stringify(docs));
-        res.render('shop/counts', {counts: docs, errMsg: errMsg, noError: !errMsg});
+        var counts = [];
+
+        for (var i=0, len=docs.length; i<len; i++) {
+            var count = getSum(docs[i]);
+            count.peeps = {};
+            count.peeps.XS = getPeeps(count.item, 'XS');
+            count.peeps.SM = getPeeps(count.item, 'SM');
+            count.peeps.MD = getPeeps(count.item, 'MD');
+            count.peeps.LG = getPeeps(count.item, 'LG');
+            count.peeps.XL = getPeeps(count.item, 'XL');
+            count.peeps.XXL = getPeeps(count.item, 'XXL');
+            count.peeps.XXXL = getPeeps(count.item, 'XXXL');
+            counts.push(count);
+        }
+        // console.log(counts);
+        res.render('shop/counts', {counts: counts, errMsg: errMsg, noError: !errMsg});
+
     });
 });
 
