@@ -20,19 +20,48 @@ table th {
     background-color: black;
     color: white;
 }
+.withC {
+    position:relative;
+}
+
+.CellComment{
+    display:none;
+    position:absolute;
+    z-index:100;
+    border:1px;
+    background-color:white;
+    border-style:solid;
+    border-width:1px;
+    border-color:red;
+    padding:3px;
+    color:red;
+    width: 150px;
+    top:20px;
+    left:20px;
+}
+.withC:hover span.CellComment{
+    display:block;
+}
+
+
 </style>
+<div>Total from Order Counts: <b>${{total}}</b></div>
+<div>Jeff & Bruce - You're names don't show, everyone else's should.</div>
+
 <div>
 <table>
-  <col width="15">
-  <col width="45">
-  <col width="5">
-  <col width="5">
-  <col width="5">
-  <col width="5">
-  <col width="5">
-  <col width="5">
-  <col width="5">
-  <col width="5">
+    <col width="15">
+    <col width="45">
+    <col width="3">
+    <col width="3">
+    <col width="3">
+    <col width="3">
+    <col width="3">
+    <col width="3">
+    <col width="3">
+    <col width="3">
+    <col width="5">
+    <col width="5">
     <tr>
     <th>Item</th>
     <th>Description</th>
@@ -43,22 +72,24 @@ table th {
     <th>XL</th>
     <th>XXL</th>
     <th>XXXL</th>
+    <th>TOTAL</th>
+    <th>$$</th>
   </tr>
 {{# each counts }}
-    {{# each this }}
- {{#if this.item}}
      <tr>
     <td>{{ this.item }}</td>
     <td>{{ this.title }}</td>
-    <td>{{ this.XS }}</td>
-    <td>{{ this.SM }}</td>
-    <td>{{ this.MD }}</td>
-    <td>{{ this.LG }}</td>
-    <td>{{ this.XL }}</td>
-    <td>{{ this.XXL }}</td>
-    <td>{{ this.XXXL }}</td>
+         <td {{# if this.peeps.XS }}class="withC"{{/if}}>{{ this.XS }}<span class="CellComment">{{# each this.peeps.XS }}{{ this }}</br>{{/each}}</span></td>
+    <td {{# if this.peeps.SM }}class="withC"{{/if}}>{{ this.SM }}<span class="CellComment">{{# each this.peeps.SM }}{{ this }}</br>{{/each}}</span></td>
+    <td {{# if this.peeps.MD }}class="withC"{{/if}}>{{ this.MD }}<span class="CellComment">{{# each this.peeps.MD }}{{ this }}</br>{{/each}}</span></td>
+    <td {{# if this.peeps.LG }}class="withC"{{/if}}>{{ this.LG }}<span class="CellComment">{{# each this.peeps.LG }}{{ this }}</br>{{/each}}</span></td>
+    <td {{# if this.peeps.XL }}class="withC"{{/if}}>{{ this.XL }}<span class="CellComment">{{# each this.peeps.XL }}{{ this }}</br>{{/each}}</span></td>
+    <td {{# if this.peeps.XXL }}class="withC"{{/if}}>{{ this.XXL }}<span class="CellComment">{{# each this.peeps.XXL }}{{ this }}</br>{{/each}}</span></td>
+    <td {{# if this.peeps.XXXL }}class="withC"{{/if}}>{{ this.XXXL }}<span class="CellComment">{{# each this.peeps.XXXL }}{{ this }}</br>{{/each}}</span></td>
+     <td>{{ this.sum}}</td>
+     <td>{{ this.value }}</td>
     </tr>
-    {{/if}}
+    {{# each this }}
     {{/each}}
 {{/each}}
 </table>
