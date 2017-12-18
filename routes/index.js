@@ -96,7 +96,7 @@ router.get('/shopping-cart', function(req, res, next) {
        return res.render('shop/shopping-cart', {products: null});
    } 
     var cart = new Cart(req.session.cart);
-    res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice});
+    res.render('shop/shopping-cart', {products: cart.generateArray(), totalPrice: cart.totalPrice,  subTotal: cart.subtotal, serviceFee: cart.serviceFee, shippingFee: cart.shippingFee});
 });
 
 router.get('/checkout', isLoggedIn, function(req, res, next) {

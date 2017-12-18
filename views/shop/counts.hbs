@@ -39,12 +39,20 @@ table th {
     top:20px;
     left:20px;
 }
-.withC:hover span.CellComment{
+.withC:active span.CellComment{
     display:block;
 }
-
+.tooltip-inner {
+    white-space:pre-wrap;
+}
 
 </style>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 <div>Total from Order Counts: <b>${{total}}</b></div>
 <div>Jeff & Bruce - You're names don't show, everyone else's should.</div>
 
@@ -79,13 +87,20 @@ table th {
      <tr>
     <td>{{ this.item }}</td>
     <td>{{ this.title }}</td>
-         <td {{# if this.peeps.XS }}class="withC"{{/if}}>{{ this.XS }}<span class="CellComment">{{# each this.peeps.XS }}{{ this }}</br>{{/each}}</span></td>
-    <td {{# if this.peeps.SM }}class="withC"{{/if}}>{{ this.SM }}<span class="CellComment">{{# each this.peeps.SM }}{{ this }}</br>{{/each}}</span></td>
-    <td {{# if this.peeps.MD }}class="withC"{{/if}}>{{ this.MD }}<span class="CellComment">{{# each this.peeps.MD }}{{ this }}</br>{{/each}}</span></td>
-    <td {{# if this.peeps.LG }}class="withC"{{/if}}>{{ this.LG }}<span class="CellComment">{{# each this.peeps.LG }}{{ this }}</br>{{/each}}</span></td>
-    <td {{# if this.peeps.XL }}class="withC"{{/if}}>{{ this.XL }}<span class="CellComment">{{# each this.peeps.XL }}{{ this }}</br>{{/each}}</span></td>
-    <td {{# if this.peeps.XXL }}class="withC"{{/if}}>{{ this.XXL }}<span class="CellComment">{{# each this.peeps.XXL }}{{ this }}</br>{{/each}}</span></td>
-    <td {{# if this.peeps.XXXL }}class="withC"{{/if}}>{{ this.XXXL }}<span class="CellComment">{{# each this.peeps.XXXL }}{{ this }}</br>{{/each}}</span></td>
+<td> {{# if this.peeps.XS }} <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{# each this.peeps.XS }}{{ this }}
+{{/each}}">{{/if}}{{ this.XS }}{{# if this.peeps.XS }} </button>{{/if}}</td>
+<td> {{# if this.peeps.SM }} <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{# each this.peeps.SM }}{{ this }}
+{{/each}}">{{/if}}{{ this.SM }}{{# if this.peeps.SM }} </button>{{/if}}</td>
+<td> {{# if this.peeps.MD }} <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{# each this.peeps.MD }}{{ this }}
+{{/each}}">{{/if}}{{ this.MD }}{{# if this.peeps.MD }} </button>{{/if}}</td>
+<td> {{# if this.peeps.LG }} <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{# each this.peeps.LG }}{{ this }}
+{{/each}}">{{/if}}{{ this.LG }}{{# if this.peeps.LG }} </button>{{/if}}</td>
+<td> {{# if this.peeps.XL }} <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{# each this.peeps.XL }}{{ this }}
+{{/each}}">{{/if}}{{ this.XL }}{{# if this.peeps.XL }} </button>{{/if}}</td>
+<td> {{# if this.peeps.XXL }} <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{# each this.peeps.XXL }}{{ this }}
+{{/each}}">{{/if}}{{ this.XXL }}{{# if this.peeps.XXL }} </button>{{/if}}</td>
+<td> {{# if this.peeps.XXXL }} <button type="button" class="btn btn-secondary" data-toggle="tooltip" data-placement="top" data-html="true" title="{{# each this.peeps.XXXL }}{{ this }}
+{{/each}}">{{/if}}{{ this.XXXL }}{{# if this.peeps.XXXL }} </button>{{/if}}</td>
      <td>{{ this.sum}}</td>
      <td>{{ this.value }}</td>
     </tr>

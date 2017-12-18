@@ -2,6 +2,9 @@ module.exports = function Cart(oldCart) {
     this.items = oldCart.items || {};
     this.totalQty = oldCart.totalQty || 0;
     this.totalPrice = oldCart.totalPrice || 0;
+    this.serviceFee = oldCart.serviceFee || 0;
+    this.shippingFee = oldCart.shippingFee || 4;
+    this.subtotal = oldCart.subtotal || 0;
 
     this.add = function(item, id) {
         var storedItem = this.items[id];
@@ -11,14 +14,18 @@ module.exports = function Cart(oldCart) {
         storedItem.qty++;
         storedItem.price = storedItem.item.price * storedItem.qty;
         this.totalQty++;
-        this.totalPrice += storedItem.item.price;
+        this.subtotal += storedItem.item.price;
+        this.serviceFee = (this.subtotal * .035);
+        this.totalPrice = this.subtotal + this.shippingFee + this.serviceFee;
     };
 
     this.reduceByOne = function(id) {
         this.items[id].qty--;
         this.items[id].price -= this.items[id].item.price;
         this.totalQty--;
-        this.totalPrice -= this.items[id].item.price;
+        this.subtotal -= this.items[id].item.price;
+        this.serviceFee = (this.subtotal * .035);
+        this.totalPrice = this.subtotal + this.shippingFee + this.serviceFee;
 
         if (this.items[id].qty <= 0) {
             delete this.items[id];
@@ -27,7 +34,9 @@ module.exports = function Cart(oldCart) {
 
     this.removeItem = function(id) {
         this.totalQty -= this.items[id].qty;
-        this.totalPrice -= this.items[id].price;
+        this.subtotal -= this.items[id].price;
+        this.serviceFee = (this.subtotal * .035);
+        this.totalPrice = this.subtotal + this.shippingFee + this.serviceFee;
         delete this.items[id];
     };
 
@@ -48,6 +57,7 @@ module.exports = function Cart(oldCart) {
                 ", price: " + this.items[id].price +
                 ", desc: " + this.items[id].item.description
         }
+        meta = meta + "\nserviceFee: " + this.serviceFee + "\nshipping: " + this.shippingFee;
         console.log(meta);
         return meta;
     };
@@ -58,7 +68,7 @@ module.exports = function Cart(oldCart) {
                 "<li>" + this.items[id].item.description +
                 "</li><ul><li>Qty: "+ this.items[id].qty + "</li><li>Size: "+this.items[id].item.size +"</li><li>Price: "+this.items[id].price+"</li></ul>"
         }
-        meta = meta + "</ul></div>";
+        meta = meta + "<li>Service Fee: " + this.serviceFee + "</li><li>Shipping Fee: " + this.serviceFee + "</li></ul></div>";
         return meta;
     };
     this.generateCounts = function() {
@@ -77,6 +87,7 @@ module.exports = function Cart(oldCart) {
 
             counts.push(item);
         }
+
         return counts;
     };
 };
