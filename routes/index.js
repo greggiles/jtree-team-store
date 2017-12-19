@@ -227,6 +227,10 @@ router.get('/testemail', isLoggedIn, function(req, res, next) {
     res.redirect('/');
 });
 
+function round(value, decimals) {
+    return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
+}
+
 router.post('/checkout', isLoggedIn, function(req, res, next) {
     if (!req.session.cart) {
         return res.redirect('/shopping-cart');
@@ -239,7 +243,7 @@ router.post('/checkout', isLoggedIn, function(req, res, next) {
     );
 
     stripe.charges.create({
-        amount: cart.totalPrice * 100,
+        amount: round(cart.totalPrice * 100,0),
         currency: "usd",
         source: req.body.stripeToken, // obtained with Stripe.js
         description: cart.generateMeta()
